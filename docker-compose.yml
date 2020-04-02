@@ -1,0 +1,25 @@
+version: "3.0"
+services:
+  cache:
+    build: ./cache
+    environment:
+      - RELEASE_COOKIE=secret
+    networks:
+      app_internal:
+        ipv4_address: 172.10.0.3
+
+  app:
+    build: ./app
+    environment:
+      - CACHE_NODE=cache@172.10.0.3
+      - RELEASE_COOKIE=secret
+    networks:
+      app_internal:
+        ipv4_address: 172.10.0.2
+
+networks:
+  app_internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.10.0.0/24
